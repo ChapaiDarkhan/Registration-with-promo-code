@@ -43,10 +43,12 @@ def get_warm_day(file_path):
     return temperature
 
 
-def get_rainy_week(file_path):
+def get_rainy_week_and_period_and_rainfall(file_path):
     data = pd.read_csv(file_path, index_col=[0], parse_dates=[0], usecols=[0, 5])
 
     temp = data.groupby([data.index.strftime('%Y-%W')]).mean()
     data = temp['U'].idxmax().split('-')
+    rainfall = temp['U'].max()
     year, week = int(data[0]), int(data[1])
-    return [datetime.strptime(f'{year}-W' + str(week) + str(x), "%Y-W%W-%w").strftime('%d.%m.%Y') for x in range(-5, 0)]
+    period = [datetime.strptime(f'{year}-W' + str(week) + str(x), "%Y-W%W-%w").strftime('%d.%m.%Y') for x in range(-5, 0)]
+    return {'period': period, 'rainfall': rainfall}
