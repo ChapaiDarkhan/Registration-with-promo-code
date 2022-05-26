@@ -21,9 +21,6 @@ def signup(request):
         if form.is_valid():
             add_invitation_bonus(form.cleaned_data.get('promo_code'))
             user = form.save()
-            user.refresh_from_db()
-            user.promo_code = form.cleaned_data.get('promo_code')
-            user.save()
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=user.username, password=raw_password)
             login(request, user)
